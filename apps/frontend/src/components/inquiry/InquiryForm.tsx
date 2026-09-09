@@ -71,17 +71,26 @@ export function InquiryForm({ listingId, askingPrice, onSuccess }: InquiryFormPr
     );
   }
 
-  const onSubmit = async (values: InquiryFormValues) => {
-    setErrorMsg(null);
-    try {
-      await createInquiry({ listingId, ...values });
-      setSubmitted(true);
-      onSuccess?.();
-    } catch (err) {
-      setErrorMsg(getErrorMessage(err));
-    }
-  };
+const onSubmit = async (values: InquiryFormValues) => {
+  setErrorMsg(null);
 
+  try {
+    if (!values.message) {
+      return;
+    }
+
+    await createInquiry({
+      listingId,
+      ...values,
+      message: values.message,
+    });
+
+    setSubmitted(true);
+    onSuccess?.();
+  } catch (err) {
+    setErrorMsg(getErrorMessage(err));
+  }
+};
   return (
     <div className="bg-white border border-cream3 rounded-xl overflow-hidden">
       <div className="bg-ink p-5">

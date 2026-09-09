@@ -1,5 +1,5 @@
 'use client';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useClinics } from '../../hooks';
 import { ClinicCard } from '../../components/clinic/ClinicCard';
@@ -9,7 +9,7 @@ import { Skeleton } from '../../components/ui/Skeleton';
 import type { ClinicSearchParams } from '../../types';
 import { Emirate } from '../../types';
 
-export default function ClinicsPage() {
+function ClinicsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -227,5 +227,18 @@ function EmptyState({ onReset }: { onReset: () => void }) {
         Reset all filters
       </button>
     </div>
+  );
+}
+export default function ClinicsPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-cream flex items-center justify-center">
+          <div className="text-teal animate-pulse">Loading clinics...</div>
+        </div>
+      }
+    >
+      <ClinicsContent />
+    </Suspense>
   );
 }
